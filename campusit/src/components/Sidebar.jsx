@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { BarChart3, Bot, Headset, LifeBuoy, ShieldCheck, Timer, Ticket, UserCog } from "lucide-react";
+import { BarChart3, Bot, Headset, LifeBuoy, MonitorCheck, ShieldCheck, Timer, Ticket, UserCog } from "lucide-react";
 import { NAV } from "@/lib/data";
 import { useApp } from "@/store";
 import { cn } from "@/lib/utils";
@@ -16,7 +16,7 @@ export default function Sidebar({ open, collapsed, onClose }) {
       "fixed inset-y-0 left-0 z-30 flex w-64 -translate-x-full flex-col gap-0.5 overflow-y-auto border-r border-bd bg-sbg p-3 transition-transform lg:sticky lg:top-0 lg:h-screen lg:w-auto lg:translate-x-0",
       open && "translate-x-0", collapsed && "lg:items-center lg:px-2")}>
       <div className="flex items-center gap-2 px-2 pb-3 pt-1.5 font-semibold">
-        <i className="size-4 shrink-0 rounded bg-ac" /><span className={cn(collapsed && "lg:hidden")}>CampusIT</span>
+        <MonitorCheck className="size-5 shrink-0 text-ac" aria-hidden="true" /><span className={cn(collapsed && "lg:hidden")}>CampusIT</span>
       </div>
       {items.map((n) => {
         const Icon = ICONS[n.icon], head = n.group && n.group !== prev; prev = n.group;
