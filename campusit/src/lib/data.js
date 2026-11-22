@@ -57,8 +57,8 @@ export const RL = ["Student", "Faculty", "Tier 1", "Tier 2", "Admin"];
 export const PF = ["Submit ticket", "View own tickets", "View all tickets", "Change priority", "AI Agent-Assist", "RPA management", "User management", "Audit logs"];
 export const PERM0 = [[1,1,1,1,1],[1,1,1,1,1],[0,0,1,1,1],[0,0,1,1,1],[0,0,1,1,1],[0,0,0,1,1],[0,0,0,0,1],[0,0,0,1,1]];
 export const USERS = [
-  ["Mylene Chupapi", "g••••••@student.edu", "Student", "Active", "2m ago"],
-  ["Prof. D. Lim", "d•••@faculty.edu", "Faculty", "Active", "1h ago"],
+  ["Gina Reyes", "g••••••@student.edu", "Student", "Active", "2m ago"],
+  ["PROF. M. Chups", "m•••@faculty.edu", "Faculty", "Active", "1h ago"],
   ["Marco Santos", "m••••••@campus.edu", "Tier 1 Agent", "Active", "now"],
   ["Rafael Cruz", "r•••••@campus.edu", "Tier 2 Agent", "Active", "12m ago"],
   ["Ana Lopez", "a•••@campus.edu", "Admin", "Active", "5m ago"],
