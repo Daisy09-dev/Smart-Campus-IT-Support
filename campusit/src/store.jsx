@@ -1,5 +1,6 @@
 import { createContext, useContext, useRef, useState } from "react";
 import { MX, TOT, RT, clock, makeTicket, seedTickets, seedAudit, PERM0, USERS, RPA_LOG0 } from "@/lib/data";
+import { verifiedCampusRole, isStaffDemoAccount } from "@/lib/campusIdentity";
 
 export const U = { s: ["Gina Reyes", "Student"], f: ["Prof. D. Lim", "Faculty"], t: ["Marco Santos", "Tier 1 Agent"], u: ["Rafael Cruz", "Tier 2 Agent"], a: ["Ana Lopez", "IT Administrator"] };
 export const isRequester = (role) => role === "s" || role === "f";
@@ -26,12 +27,23 @@ export function AppProvider({ children, initialRole = null }) {
 
   const toast = (m) => { setMsg(m); clearTimeout(tm.current); tm.current = setTimeout(() => setMsg(""), 2400); };
   const log = (u, a, r, res = "Authorized") => setAudit((x) => [[u, a, r || "—", clock(), res], ...x]);
-  const signIn = (account) => {
+  // Client-side demonstration only. Production must verify a signed campus session on the server.
+  const beginSession = (account, method) => {
     if (!Object.hasOwn(U, account)) return false;
     setRole(account); setGq(""); setMsg("");
-    log(U[account][0], "Demo sign in", U[account][1]);
+    log(U[account][0], method, U[account][1]);
     return true;
   };
+  const signInCampus = (token, confirmed) => {
+    const account = verifiedCampusRole(token, confirmed);
+    if (!account) { log("Unverified campus identity", "QR sign-in attempt", "Campus identity", "Denied"); return false; }
+    return beginSession(account, "Demo campus QR verified");
+  };
+  const signInStaff = (account) => {
+    if (!isStaffDemoAccount(account)) { log("Unverified staff identity", "Staff sign-in attempt", "Staff access", "Denied"); return false; }
+    return beginSession(account, "Demo staff sign in");
+  };
+  const recordCampusDenial = () => log("Unverified campus identity", "QR sign-in attempt", "Campus identity", "Denied");
   const signOut = () => {
     if (role) log(U[role][0], "Demo sign out", U[role][1]);
     setRole(null); setGq(""); setMsg("");
@@ -156,6 +168,6 @@ export function AppProvider({ children, initialRole = null }) {
   const togglePerm = (i, j) => { if (role !== "a") return deny("Permission matrix"); setPerm((p) => p.map((r, a) => (a === i ? r.map((v, b) => (b === j ? (v ? 0 : 1) : v)) : r))); log("Admin", "Changed permission", `row ${i + 1} · col ${j + 1}`); toast("Permission updated"); };
   const setUserRole = (i, r) => { if (role !== "a") return deny("User management"); setUsers((us) => us.map((u, a) => (a === i ? [u[0], u[1], r, u[3], u[4]] : u))); log("Admin", "Changed role", users[i][0] + " → " + r); toast("Role updated"); };
 
-  const v = { role, signIn, signOut, deny, tickets, maintenance, recordMaintenance, notes, audit, perm, users, rpa, rpaId, msg, gq, setGq, createTicket, rerate, studentReply, acceptAi, ignoreAi, addNote, escalate, toggleElev, genSummary, saveSummary, resolve, triggerRpa, runRpa, togglePerm, setUserRole };
+  const v = { role, signInCampus, signInStaff, recordCampusDenial, signOut, deny, tickets, maintenance, recordMaintenance, notes, audit, perm, users, rpa, rpaId, msg, gq, setGq, createTicket, rerate, studentReply, acceptAi, ignoreAi, addNote, escalate, toggleElev, genSummary, saveSummary, resolve, triggerRpa, runRpa, togglePerm, setUserRole };
   return <Ctx.Provider value={v}>{children}</Ctx.Provider>;
 }
